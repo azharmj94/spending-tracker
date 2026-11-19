@@ -653,7 +653,7 @@
   $$('#tabs button').forEach((b) => b.addEventListener('click', () => {
     S.view = b.dataset.v; document.body.classList.toggle('cal-on', S.view === 'cal'); $$('#tabs button').forEach((x) => x.classList.toggle('on', x === b));
     $$('.view').forEach((v) => v.classList.toggle('on', v.id === 'v-' + S.view));
-    movePill(); revealView(); setNav(false);
+    movePill(); revealView();
     try { history.replaceState(null, '', '#' + S.view); } catch (err) { /* sandboxed */ }
     render(); scrollTo({ top: 0 });
   }));
@@ -824,29 +824,8 @@
   /* ---------- motion: sliding tab pill, cards that rise in as they scroll into view ---------- */
   function movePill() {
     const on = $('#tabs button.on'), pill = $('#navPill'); if (!on || !pill) return;
-    pill.style.height = on.offsetHeight + 'px'; pill.style.transform = `translateY(${on.offsetTop}px)`;
+    pill.style.width = on.offsetWidth + 'px'; pill.style.transform = `translateX(${on.offsetLeft}px)`;
   }
-  /* ---------- side nav drawer: hidden at the right edge; swipe in, or tap the grip ---------- */
-  const nav = $('#tabs'), grip = $('#navGrip');
-  function setNav(open) {
-    nav.classList.toggle('open', open); document.body.classList.toggle('nav-open', open);
-    grip.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) requestAnimationFrame(movePill);
-  }
-  grip.addEventListener('click', () => setNav(true));
-  $('#navScrim').addEventListener('click', () => setNav(false));
-  addEventListener('keydown', (e) => { if (e.key === 'Escape' && nav.classList.contains('open')) setNav(false); });
-  let sw = null;
-  addEventListener('touchstart', (e) => {
-    if (e.touches.length !== 1 || drag.active) { sw = null; return; }
-    const t = e.touches[0], open = nav.classList.contains('open');
-    if (open || t.clientX > innerWidth - 24) sw = { x: t.clientX, y: t.clientY, open }; else sw = null;
-  }, { passive: true });
-  addEventListener('touchend', (e) => {
-    if (!sw) return; const t = e.changedTouches[0], dx = t.clientX - sw.x, dy = t.clientY - sw.y; const s0 = sw; sw = null;
-    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-    if (!s0.open && dx < 0) setNav(true); else if (s0.open && dx > 0) setNav(false);
-  }, { passive: true });
   const io = ('IntersectionObserver' in window) && !reduceMotion() ? new IntersectionObserver((es) => {
     let n = 0; es.forEach((e) => { if (e.isIntersecting && !e.target.classList.contains('in')) { e.target.style.transitionDelay = (n++ * 90) + 'ms'; e.target.classList.add('in'); } });
   }, { threshold: 0.06 }) : null;
