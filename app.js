@@ -17,15 +17,26 @@
   const uid = (p) => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   const tok = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Line icons (lucide shapes), one size and stroke everywhere */
+  const ICONS = {
+    utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>',
+    fuel: '<path d="M3 22h12"/><path d="M4 9h10"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V9.83a2 2 0 0 0-.59-1.42L18 5"/>',
+    house: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .71-1.53l7-6a2 2 0 0 1 2.58 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/>',
+    bag: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+    card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+    up: '<path d="m18 15-6-6-6 6"/>', down: '<path d="m6 9 6 6 6-6"/>'
+  };
+  const ico = (name) => { const s = document.createElement('span'); s.className = 'icw'; s.innerHTML = `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ''}</svg>`; return s; };
   const DEFAULT_CATS = ['Groceries', 'Food & dining', 'Fuel & transport', 'Bills & subscriptions', 'Shopping & clothing', 'Hardware & home', 'Family', 'Health', 'Travel & leisure', 'E-wallet top-up', 'Instalments & BNPL', 'Interest & fees', 'Debt payments', 'Other'];
   const NOT_SPENDING = new Set(['Debt payments']);
   const GROUPS = [
-    { name: 'Food & groceries', icon: '🍽', cats: ['Groceries', 'Food & dining'] },
-    { name: 'Transport', icon: '⛽', cats: ['Fuel & transport'] },
-    { name: 'Bills & home', icon: '🏠', cats: ['Bills & subscriptions', 'Hardware & home'] },
-    { name: 'Family & health', icon: '❤', cats: ['Family', 'Health'] },
-    { name: 'Shopping & other', icon: '🛍', cats: ['Shopping & clothing', 'Travel & leisure', 'E-wallet top-up', 'Other'] },
-    { name: 'Debt & charges', icon: '💳', cats: ['Instalments & BNPL', 'Interest & fees', 'Debt payments'] }];
+    { name: 'Food & groceries', icon: 'utensils', cats: ['Groceries', 'Food & dining'] },
+    { name: 'Transport', icon: 'fuel', cats: ['Fuel & transport'] },
+    { name: 'Bills & home', icon: 'house', cats: ['Bills & subscriptions', 'Hardware & home'] },
+    { name: 'Family & health', icon: 'heart', cats: ['Family', 'Health'] },
+    { name: 'Shopping & other', icon: 'bag', cats: ['Shopping & clothing', 'Travel & leisure', 'E-wallet top-up', 'Other'] },
+    { name: 'Debt & charges', icon: 'card', cats: ['Instalments & BNPL', 'Interest & fees', 'Debt payments'] }];
   const groupOf = (c) => (GROUPS.find((g) => g.cats.includes(c)) || GROUPS[4]).name;
   const DISCRETIONARY = new Set(['Food & dining', 'Shopping & clothing', 'Travel & leisure', 'E-wallet top-up', 'Hardware & home']);
 
@@ -151,7 +162,7 @@
       grid.append(el('button', { type: 'button', role: 'tab', class: 'gtile' + (on ? ' on' : '') + (gsum ? '' : ' zero') + (g.name === 'Debt & charges' ? ' debtg' : ''),
         'aria-label': `${g.name}: ${RM(gsum, 0)}`, 'aria-selected': on ? 'true' : 'false', title: g.name,
         onclick: () => { S.openGroup = on ? null : g.name; S.subFilter = null; renderMonthView(); } },
-        el('span', { class: 'gti', text: g.icon }), el('span', { class: 'gta', text: k(gsum) }),
+        el('span', { class: 'gti' }, ico(g.icon)), el('span', { class: 'gta', text: k(gsum) }),
         el('span', { class: 'gtb' }, el('i', { style: `width:${pct}%` }))));
     });
     box.append(grid);
@@ -164,7 +175,7 @@
     const pick = S.pick || null; if (pick) { const ids = new Set(list.map((i) => i.id)); [...pick].forEach((id) => { if (!ids.has(id)) pick.delete(id); }); }
     const vis = all || pick ? shown : shown.slice(0, 8);
     const panel = el('div', { class: 'gpanel' },
-      el('div', { class: 'gph' }, el('span', { text: g.icon + '  ' + g.name }), el('span', { class: 'gpr' }, el('b', { text: RM(gsum, 0) }),
+      el('div', { class: 'gph' }, el('span', { class: 'gpn' }, ico(g.icon), g.name), el('span', { class: 'gpr' }, el('b', { text: RM(gsum, 0) }),
         list.length ? el('button', { type: 'button', class: 'trayx', text: pick ? 'Done' : 'Select', onclick: () => { S.pick = pick ? null : new Set(); S.bulkArm = false; renderMonthView(); } }) : null)),
       pick ? bulkBar(M, shown, pick) : null,
       subs.length > 1 ? el('div', { class: 'subs' },
@@ -278,7 +289,7 @@
         el('div', { class: 'rank', text: i + 1 }),
         el('div', { class: 'nm' }, el('div', { text: d.name }), el('div', { text: d.note || '' })),
         el('div', { class: 'amt' }, el('div', { text: d.balance != null ? RM(d.balance, 0) : 'Balance ?' }), el('div', { text: RM(d.monthly, 0) + '/mo' })),
-        el('span', { class: 'mv' }, el('button', { text: '▲', 'aria-label': 'Move up', disabled: i === 0 ? '' : null, onclick: mv(-1) }), el('button', { text: '▼', 'aria-label': 'Move down', disabled: i === S.debts.length - 1 ? '' : null, onclick: mv(1) }))));
+        el('span', { class: 'mv' }, el('button', { 'aria-label': 'Move up', disabled: i === 0 ? '' : null, onclick: mv(-1) }, ico('up')), el('button', { 'aria-label': 'Move down', disabled: i === S.debts.length - 1 ? '' : null, onclick: mv(1) }, ico('down')))));
     });
     $('#debtTotal').textContent = RM(S.debts.reduce((a, d) => a + (d.balance || 0), 0), 0);
     box.append(el('button', { class: 'btn ghostbtn', text: '+ Add debt', style: 'margin-top:6px', onclick: () => openDebtEdit(null) }));
