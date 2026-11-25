@@ -2,7 +2,7 @@
  * App files: network first, saved copy when there is no internet.
  * Libraries from CDNs (fonts, PDF reader, receipt text reader, Firebase SDK): saved copy first.
  */
-const CACHE = 'spending-tracker-v6';
+const CACHE = 'spending-tracker-v7';
 const SHELL = ['./', 'index.html', 'app.js', 'store.js', 'report.js', 'firebase-config.js', 'vendor/pdf-lib.min.js', 'seed.json', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png',
   'vendor/ocr/tesseract.min.js', 'vendor/ocr/worker.min.js', 'vendor/ocr/tesseract-core-simd-lstm.wasm.js', 'vendor/ocr/tesseract-core-lstm.wasm.js', 'vendor/ocr/eng.traineddata.gz'];
 const LIBS = ['cdn.jsdelivr.net', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'www.gstatic.com'];

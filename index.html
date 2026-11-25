@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<!-- This site is hosted on Netlify. Anyone can build and deploy a site
-     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=3daf795f-3e94-4932-9c67-6555f578c3ba
-     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Spending Tracker</title>
 <script>try{var t=localStorage.getItem('ft-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
@@ -18,7 +15,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Spending">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#f6f3ec;--panel:#fffdf8;--panel2:#f2eee4;--line:#e3dccd;--fg:#1d1b16;--muted:#6b665a;--dim:#a29c8e;
@@ -51,28 +48,29 @@ header.top h1{font-size:22px;font-weight:500;margin:0}
 .months::-webkit-scrollbar{display:none}
 .mbtn{flex:none;scroll-snap-align:start;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 14px;font-size:14px;color:var(--muted);cursor:pointer;transition:all .25s var(--ease)}
 .mbtn.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px}
-.card h2{font-size:17px;font-weight:600;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:14px;animation:up .55s var(--ease) both}
+.card h2{font-size:17px;font-weight:500;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.card h2 .ic{width:28px;height:28px;border-radius:50%;border:2px solid var(--accent);display:grid;place-items:center;color:var(--accent);font-size:13px;flex:none}
 .card .sub{color:var(--muted);font-size:14px;line-height:1.5;margin:0 0 12px}
 .card .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:12px}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}}
 .stat{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px}
 .stat .l{font-size:12px;color:var(--muted)}
-.stat .v{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:4px;letter-spacing:-.01em}
+.stat .v{font-size:20px;font-weight:500;font-variant-numeric:tabular-nums;margin-top:4px;letter-spacing:-.01em}
 .stat .v.bad{color:var(--bad)}.stat .v.ok{color:var(--ok)}.stat .v.warn{color:var(--warn)}
-.stat input{width:100%;background:transparent;border:0;border-bottom:1px dashed var(--dim);font-size:20px;font-weight:600;padding:0;outline:none}
+.stat input{width:100%;background:transparent;border:0;border-bottom:1px dashed var(--dim);font-size:20px;font-weight:500;padding:0;outline:none}
 .bar{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;margin-top:12px}
 .bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width 1s var(--ease)}
 .bar i.over{background:var(--bad)}
 .buckets{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
 .bucket{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px;min-height:84px;transition:border-color .2s,background .2s,transform .2s}
 .bucket.hot{border-color:var(--accent);background:var(--hot)}
-.bucket .bh{display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin-bottom:8px}
+.bucket .bh{display:flex;justify-content:space-between;font-size:14px;font-weight:500;margin-bottom:8px}
 .bucket .bh span:last-child{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:500}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--chipline);border-radius:10px;padding:6px 9px;font-size:13px;cursor:grab;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;max-width:100%;transition:transform .15s,opacity .2s}
-.chip b{font-weight:600;font-variant-numeric:tabular-nums;color:var(--fg)}
+.chip b{font-weight:500;font-variant-numeric:tabular-nums;color:var(--fg)}
 .chip .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px;color:var(--muted)}
 .chip.planned{border-style:dashed;border-color:var(--dim)}
 .chip.dragging{opacity:.25}
@@ -81,14 +79,13 @@ header.top h1{font-size:22px;font-weight:500;margin:0}
 .ghost{position:fixed;z-index:999;pointer-events:none;transform:translate(-50%,-60%) rotate(-3deg) scale(1.06);box-shadow:0 14px 30px -10px #000c;border-color:var(--accent)!important;background:var(--sel)!important}
 .pool{display:flex;flex-wrap:wrap;gap:8px;min-height:64px;padding:12px;border:1px dashed var(--dash);border-radius:14px;background:var(--panel2)}
 .pool.hot{border-color:var(--accent)}
-.pool .chip:nth-child(3n){animation-duration:5s;animation-delay:-1s}.pool .chip:nth-child(3n+1){animation-duration:4.5s;animation-delay:-2s}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px}
 .cal .dow{font-size:11px;color:var(--dim);text-align:center;padding:4px 0}
 .day{min-height:64px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:4px;font-size:11px;position:relative;transition:border-color .2s,background .2s;overflow:hidden}
 .day.blank{background:transparent;border-color:transparent}
 .day.hot{border-color:var(--accent);background:var(--hot)}
 .day.today{border-color:var(--hotline)}
-.day .n{color:var(--muted);font-weight:600}
+.day .n{color:var(--muted);font-weight:500}
 .day .sp{position:absolute;right:4px;top:4px;font-size:10px;color:var(--dim);font-variant-numeric:tabular-nums}
 .day .heat{position:absolute;inset:auto 0 0 0;height:3px;background:var(--accent);opacity:.0}
 .day .chip{font-size:10px;padding:2px 5px;margin-top:3px;display:flex;border-radius:6px}
@@ -102,14 +99,14 @@ header.top h1{font-size:22px;font-weight:500;margin:0}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .in{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;outline:none;min-width:0}
 .in:focus{border-color:var(--accent)}
-.btn{background:var(--fg);border:0;border-radius:10px;padding:10px 16px;font-weight:600;font-size:14px;cursor:pointer;color:var(--bg)}
+.btn{background:var(--fg);border:0;border-radius:10px;padding:10px 16px;font-weight:500;font-size:14px;cursor:pointer;color:var(--bg)}
 .btn.ghostbtn{background:var(--panel2);border:1px solid var(--line);color:var(--fg)}
 .btn.danger{background:var(--badbg);color:var(--bad);border:1px solid var(--badline)}
 .debt{display:flex;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:8px;cursor:grab;user-select:none;-webkit-user-select:none;transition:transform .2s,border-color .2s}
 .debt.hot{border-color:var(--accent);transform:translateY(4px)}
-.debt .rank{width:28px;height:28px;border-radius:50%;background:var(--hot);color:var(--accent);display:grid;place-items:center;font-weight:600;font-size:13px;flex:none}
+.debt .rank{width:28px;height:28px;border-radius:50%;background:var(--hot);color:var(--accent);display:grid;place-items:center;font-weight:500;font-size:13px;flex:none}
 .debt .nm{flex:1;min-width:0}
-.debt .nm div:first-child{font-weight:600;font-size:14px}
+.debt .nm div:first-child{font-weight:500;font-size:14px}
 .debt .nm div:last-child{font-size:12px;color:var(--muted)}
 .debt .amt{text-align:right;font-variant-numeric:tabular-nums;font-size:14px}
 .debt .amt div:last-child{font-size:12px;color:var(--muted)}
@@ -143,19 +140,18 @@ table.prev td{padding:6px 4px;border-bottom:1px solid var(--line)}
 /* ---- compact calendar: fits one phone screen ---- */
 .calwrap{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:10px 10px 8px;animation:up .45s var(--ease) both}
 .calhead{display:flex;flex-direction:column;gap:2px;margin:0 2px 6px}
-.calhead #calTitle{font-weight:600;font-size:16px}
+.calhead #calTitle{font-weight:500;font-size:16px}
 .calhead .muted{font-size:12px}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:0}
 .cal .dow{font-size:10px;color:var(--dim);text-align:center;padding:2px 0}
 .day{height:clamp(40px,6.2vh,64px);min-height:0;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:3px 4px;font-size:11px;position:relative;overflow:hidden;cursor:pointer;transition:border-color .15s,background .15s,transform .15s}
-.day .n{color:var(--muted);font-weight:600;font-size:11px}
+.day .n{color:var(--muted);font-weight:500;font-size:11px}
 .day .dots{position:absolute;left:4px;right:4px;bottom:4px;display:flex;gap:2px;flex-wrap:wrap}
 .day .dots i{width:6px;height:6px;border-radius:50%;background:var(--warn)}
 .day .amt{position:absolute;right:4px;bottom:3px;font-size:9px;color:var(--dim);font-variant-numeric:tabular-nums}
 .day .heat{position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--accent)}
 .day.sel{border-color:var(--accent2);background:var(--sel)}
 .day.hot{border-color:var(--accent);background:var(--hot);z-index:2}
-.cal.placing .day:not(.blank){border-color:var(--hotline);animation:pulse 1.4s ease-in-out infinite}
 .daypanel{margin-top:8px;min-height:44px;max-height:26vh;overflow-y:auto;font-size:13px}
 .daypanel .dprow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px solid var(--line)}
 .daypanel .dprow:last-child{border:0}
@@ -168,7 +164,6 @@ table.prev td{padding:6px 4px;border-bottom:1px solid var(--line)}
 .trayx{background:none;border:1px solid var(--line);color:var(--fg);border-radius:8px;font-size:12px;padding:3px 10px}
 .traychips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 0 2px;max-width:980px;margin:0 auto}
 .traychips::-webkit-scrollbar{display:none}
-.traychips .chip{flex:none;touch-action:pan-x}
 .traychips .chip.selected{border-color:var(--accent);background:var(--sel)}
 body.cal-on .toast{bottom:calc(170px + env(safe-area-inset-bottom))}
 body.cal-on{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
@@ -203,9 +198,9 @@ body.cal-on .months{padding-bottom:6px}
 .ghead{width:100%;display:flex;align-items:center;gap:10px;background:none;border:0;padding:12px;text-align:left;cursor:pointer}
 .gic{width:34px;height:34px;border-radius:10px;background:var(--tint);display:grid;place-items:center;font-size:16px;flex:none}
 .gname{flex:1;min-width:0;display:flex;flex-direction:column}
-.gname>span:first-child{font-weight:600;font-size:15px}
+.gname>span:first-child{font-weight:500;font-size:15px}
 .gsub{font-size:12px;color:var(--muted);text-align:left}
-.gamt{font-weight:600;font-variant-numeric:tabular-nums;font-size:15px}
+.gamt{font-weight:500;font-variant-numeric:tabular-nums;font-size:15px}
 .chev{color:var(--muted);transition:transform .25s var(--ease);font-size:16px}
 .group.open .chev{transform:rotate(180deg)}
 .gbar{height:3px;background:var(--chip);margin:0 12px}
@@ -220,7 +215,7 @@ body.cal-on .months{padding-bottom:6px}
 .grow:last-child{border-bottom:0}
 .grow .gd{display:flex;flex-direction:column;min-width:0}
 .grow .gd>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.grow b{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.grow b{font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
 
 /* six icon tiles */
 .gtiles{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
@@ -230,11 +225,11 @@ body.cal-on .months{padding-bottom:6px}
 .gtile.on{border-color:var(--accent);background:var(--hot)}
 .gtile.zero{opacity:.45}
 .gti{font-size:24px;line-height:1}
-.gta{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--fg)}
+.gta{font-size:12px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--fg)}
 .gtb{width:70%;height:3px;background:var(--chip);border-radius:2px;overflow:hidden}
 .gtb i{display:block;height:100%;background:var(--accent)}
 .gpanel{margin-top:10px;background:var(--panel2);border:1px solid var(--hotline);border-radius:14px;padding:12px;animation:up .3s var(--ease) both}
-.gph{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:15px;margin-bottom:8px}
+.gph{display:flex;justify-content:space-between;align-items:center;font-weight:500;font-size:15px;margin-bottom:8px}
 .gph b{font-variant-numeric:tabular-nums}
 /* bulk select */
 .gpr{display:flex;align-items:center;gap:10px}
@@ -261,7 +256,7 @@ body.cal-on .months{padding-bottom:6px}
 .rrow .in{margin:0;padding:8px 9px;font-size:13px;width:100%}
 .rrow select{grid-column:2 / 4}
 .rrow.off{opacity:.45}
-.rtot{display:flex;justify-content:space-between;font-size:14px;font-weight:600;padding:4px 2px;font-variant-numeric:tabular-nums}
+.rtot{display:flex;justify-content:space-between;font-size:14px;font-weight:500;padding:4px 2px;font-variant-numeric:tabular-nums}
 img.rphoto{display:block;width:100%;max-height:30vh;object-fit:contain;background:var(--bg);border:1px solid var(--line);border-radius:12px;margin-bottom:8px}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -282,14 +277,19 @@ html{background:var(--bg)}
 [hidden]{display:none!important}
 body{background:transparent;position:relative}
 header.top h1{white-space:nowrap;font-family:var(--serif);font-weight:500;font-size:22px;line-height:1.1;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
-header.top h1 small{display:block;font:400 13px Roboto,system-ui,sans-serif;color:var(--muted);margin-top:2px}
+header.top h1 small{display:block;font:400 13px Roboto,system-ui,sans-serif;letter-spacing:0;color:var(--muted);margin-top:2px}
 .logo{width:40px;height:40px;flex:none;border-radius:12px;box-shadow:var(--shadow)}
+
 header.top .badge{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .drop{display:block}
 .hd .badge{flex:none}
 .badge{font-family:Roboto,system-ui,sans-serif;color:var(--muted)}
 .card,.calwrap{box-shadow:var(--shadow);border-radius:var(--r)}
 .card h2{font-family:var(--serif);font-weight:500;font-size:20px;letter-spacing:-.01em}
+.card h2 .ic{border-width:1.5px}
+.card h2 .ic svg{width:14px;height:14px}
+.gti svg{width:22px;height:22px}
+.gsm svg{width:16px;height:16px;vertical-align:-3px;margin-right:6px}
 .stat{transition:transform .35s var(--ease),border-color .3s}
 .stat .v,.stat input{font-family:var(--serif);font-weight:500;font-size:24px}
 .type{font-family:var(--serif);font-weight:500;font-size:28px;background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--fg)}
@@ -327,18 +327,15 @@ nav.tabs button:active{transform:scale(.92)}
 .scan{border-color:var(--dash)}
 .scanst .spin{border-top-color:var(--accent)}
 .radar text{fill:var(--muted)}
+html.reveal .card,html.reveal .calwrap{animation:none;opacity:0;transform:translateY(22px) scale(.985);transition:opacity .7s var(--ease),transform .8s var(--ease)}
+html.reveal .card.in,html.reveal .calwrap.in{opacity:1;transform:none}
 .install{display:flex;gap:14px;align-items:center}
-.install img{width:64px;height:64px;border-radius:16px;box-shadow:var(--shadow);flex:none}
 @keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:none}}
 @keyframes viewin{from{opacity:0}to{opacity:1}}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
-.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px}
-.scan .btn{display:inline-flex;align-items:center;gap:8px}
-.gti .i{width:20px;height:20px;color:var(--muted)}.gtile.on .gti .i{color:var(--accent)}
-.icw{display:inline-flex}.gpn{display:inline-flex;align-items:center;gap:8px}.gph .i{color:var(--muted)}
-.debt .mv button{display:grid;place-items:center}.debt .mv .i{width:14px;height:14px}
-.btn:focus-visible,.mbtn:focus-visible,.gtile:focus-visible,nav.tabs button:focus-visible,.trayx:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}html.reveal .card,html.reveal .calwrap{opacity:1;transform:none}}
+.sfield{display:grid;gap:4px;margin-bottom:10px;font-size:13px;color:var(--muted)}.sfield .in{color:var(--fg)}.sfield small{font-size:11px}.srow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.srow.tot{font-weight:500;color:var(--fg);border-bottom:0;font-size:16px;padding-top:12px}.srow.sub2{color:var(--muted);font-size:13px}.salout{margin:12px 0}.debt .mv button{display:grid;place-items:center}.debt .mv svg{width:14px;height:14px}
+.btn:focus-visible,.mbtn:focus-visible,.gtile:focus-visible,.spill:focus-visible,nav.tabs button:focus-visible,.trayx:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -371,16 +368,16 @@ nav.tabs button:active{transform:scale(.92)}
       <button class="btn ghostbtn" id="pdfBtn" type="button" style="margin-top:12px;width:100%">Export PDF report</button>
     </div>
     <div class="card">
-      <div class="hd"><div><h2>Where it went</h2><p class="sub" style="margin:0">Tap an icon to see its expenses. Tap an expense to edit it.</p></div></div>
+      <div class="hd"><div><h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h14l-3-3M20 17H6l3 3"/></svg></span>Where it went</h2><p class="sub" style="margin:0">Tap an icon to see its expenses. Tap an expense to edit it.</p></div></div>
       <div class="buckets" id="buckets"></div>
     </div>
     <div class="card">
-      <h2>Add expense</h2>
+      <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>Add expense</h2>
       <p class="sub">Leave the date empty to add it as a floating expense, then place it on the Calendar tab when you decide.</p>
       <div class="scan" id="scanBox">
         <div class="row">
-          <label class="btn ghostbtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>Take photo of receipt<input type="file" id="scanCam" accept="image/*" capture="environment" hidden></label>
-          <label class="btn ghostbtn"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><path d="M16 8h-6M16 12H8M13 16H8"/></svg>Upload receipt<input type="file" id="scanFile" accept="image/*" hidden></label>
+          <label class="btn ghostbtn">Take photo of receipt<input type="file" id="scanCam" accept="image/*" capture="environment" hidden></label>
+          <label class="btn ghostbtn">Upload receipt<input type="file" id="scanFile" accept="image/*" hidden></label>
         </div>
         <div class="scanst" id="scanSt" hidden><i class="spin"></i><span id="scanMsg">Reading receipt…</span><button class="trayx" id="scanStop" type="button">Cancel</button></div>
         <p class="muted" id="scanHelp" style="margin:8px 0 0">The receipt is read on this device, each item is sorted into a category, and you check everything before it is added.</p>
@@ -411,19 +408,22 @@ nav.tabs button:active{transform:scale(.92)}
   <!-- PROFILE -->
   <section class="view" id="v-profile">
     <div class="card">
-      <div class="hd"><div><h2>Your money profile</h2></div><span class="badge" id="profScope">All months</span></div>
+      <div class="hd"><div><h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span>Your money profile</h2></div><span class="badge" id="profScope">All months</span></div>
       <p class="sub">Six money habits, each scored 0 to 5 from your own data. A bigger shape is healthier.</p>
       <div class="type" id="ptype">—</div>
       <p class="sub" id="pdesc"></p>
       <div id="radar"></div>
     </div>
-    <div class="card"><h2>How each score is worked out</h2><div id="metrics"></div></div>
+    <div class="card"><h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>How each score is worked out</h2><div id="metrics"></div></div>
+    <div class="card"><h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M16 7H10a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6H8"/></svg></span>Salary calculator</h2>
+      <p class="sub">Estimate your net pay from gross. KWSP rates are yours to set. PCB is an estimate, so check it against your payslip.</p>
+      <div id="salary"></div></div>
   </section>
 
   <!-- DEBTS -->
   <section class="view" id="v-debts">
     <div class="card">
-      <div class="hd"><div><h2>Debt payoff order</h2><p class="sub" style="margin:0">Use the arrows to set which debt gets your extra money first. Pay the minimum on all, extra on #1. Tap a debt to edit it.</p></div><span class="badge" id="debtTotal">RM 0</span></div>
+      <div class="hd"><div><h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M3 8l4-4 4 4M17 20V4M13 16l4 4 4-4"/></svg></span>Debt payoff order</h2><p class="sub" style="margin:0">Use the arrows to set which debt gets your extra money first. Pay the minimum on all, extra on #1. Tap a debt to edit it.</p></div><span class="badge" id="debtTotal">RM 0</span></div>
       <div id="debts"></div>
     </div>
   </section>
@@ -431,24 +431,24 @@ nav.tabs button:active{transform:scale(.92)}
   <!-- IMPORT -->
   <section class="view" id="v-import">
     <div class="card">
-      <h2>Import statements</h2>
+      <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg></span>Import statements</h2>
       <p class="sub">Drop a CSV (date, description, amount) or a bank statement PDF. Locked PDFs ask for their password here in the app; it isn't saved.</p>
       <label class="drop" id="dropZone" data-filedrop="1"><strong>Drop files here</strong>or tap to choose<input type="file" id="fileIn" accept=".csv,.txt,.pdf" multiple hidden></label>
       <div id="pdfPw" style="display:none;margin-top:10px" class="row"><input class="in" id="pwIn" type="password" placeholder="PDF password" style="flex:1"><button class="btn" id="pwBtn" type="button">Unlock</button></div>
       <div id="importPrev" style="margin-top:12px"></div>
     </div>
     <div class="card" id="remCard">
-      <h2>Reminders</h2>
+      <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 6 2 7 2 7H4s2-1 2-7M10 19a2 2 0 0 0 4 0"/></svg></span>Reminders</h2>
       <p class="sub" id="remStatus"></p>
       <button class="btn" id="remBtn" type="button" hidden>Turn on reminders</button>
     </div>
     <div class="card" id="installCard">
-      <h2>Add to Home Screen</h2>
+      <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21H3z"/></svg></span>Add to Home Screen</h2>
       <div class="install"><img src="icon.svg" alt="">
         <div><p class="sub" id="installHelp" style="margin:0 0 8px"></p><button class="btn" id="installBtn" type="button" hidden>Install app</button></div></div>
     </div>
     <div class="card">
-      <h2>Backup &amp; move</h2>
+      <h2><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M4 20h16"/></svg></span>Backup &amp; move</h2>
       <p class="sub">Copy all your data as text, to keep a backup or to move it into your Firebase version. Paste a backup to restore it.</p>
       <div class="row"><button class="btn ghostbtn" id="copyBtn" type="button">Copy backup</button><button class="btn ghostbtn" id="restoreBtn" type="button">Restore from paste</button><button class="btn ghostbtn" id="authBtn" type="button" hidden>Sign in</button></div>
       <textarea class="in" id="restoreTxt" placeholder="Paste a backup here" style="width:100%;height:90px;margin-top:10px;display:none"></textarea>

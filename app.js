@@ -17,30 +17,51 @@
   const uid = (p) => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   const tok = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  /* Line icons (lucide shapes), one size and stroke everywhere */
-  const ICONS = {
-    utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>',
-    fuel: '<path d="M3 22h12"/><path d="M4 9h10"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V9.83a2 2 0 0 0-.59-1.42L18 5"/>',
-    house: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .71-1.53l7-6a2 2 0 0 1 2.58 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
-    heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/>',
-    bag: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
-    card: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
-    up: '<path d="m18 15-6-6-6 6"/>', down: '<path d="m6 9 6 6 6-6"/>'
-  };
-  const ico = (name) => { const s = document.createElement('span'); s.className = 'icw'; s.innerHTML = `<svg class="i" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ''}</svg>`; return s; };
   const DEFAULT_CATS = ['Groceries', 'Food & dining', 'Fuel & transport', 'Bills & subscriptions', 'Shopping & clothing', 'Hardware & home', 'Family', 'Health', 'Travel & leisure', 'E-wallet top-up', 'Instalments & BNPL', 'Interest & fees', 'Debt payments', 'Other'];
   const NOT_SPENDING = new Set(['Debt payments']);
   const GROUPS = [
-    { name: 'Food & groceries', icon: 'utensils', cats: ['Groceries', 'Food & dining'] },
-    { name: 'Transport', icon: 'fuel', cats: ['Fuel & transport'] },
-    { name: 'Bills & home', icon: 'house', cats: ['Bills & subscriptions', 'Hardware & home'] },
-    { name: 'Family & health', icon: 'heart', cats: ['Family', 'Health'] },
-    { name: 'Shopping & other', icon: 'bag', cats: ['Shopping & clothing', 'Travel & leisure', 'E-wallet top-up', 'Other'] },
-    { name: 'Debt & charges', icon: 'card', cats: ['Instalments & BNPL', 'Interest & fees', 'Debt payments'] }];
+    { name: 'Food & groceries', cats: ['Groceries', 'Food & dining'] },
+    { name: 'Transport', cats: ['Fuel & transport'] },
+    { name: 'Bills & home', cats: ['Bills & subscriptions', 'Hardware & home'] },
+    { name: 'Family & health', cats: ['Family', 'Health'] },
+    { name: 'Shopping & other', cats: ['Shopping & clothing', 'Travel & leisure', 'E-wallet top-up', 'Other'] },
+    { name: 'Debt & charges', cats: ['Instalments & BNPL', 'Interest & fees', 'Debt payments'] }];
+  const GSVG = {
+    'Food & groceries': `<path d="M3 2v7a3 3 0 0 0 6 0V2M6 2v20M18 15V2c-2.2 0-4 2.2-4 6v5h4zM18 15v7"/>`,
+    'Transport': `<path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16M3 22h12M15 10h2a2 2 0 0 1 2 2v6a2 2 0 0 0 4 0V8l-3-3M7 8h4"/>`,
+    'Bills & home': `<path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5M10 21v-6h4v6"/>`,
+    'Family & health': `<path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/>`,
+    'Shopping & other': `<path d="M5 8h14l-1 13H6L5 8zM9 8V6a3 3 0 0 1 6 0v2"/>`,
+    'Debt & charges': `<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/>`
+  };
+  const chev = (d) => { const e = el('span', { class: 'icw' }); e.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`; return e; };
+  const gicon = (name, cls) => {
+    const e = el('span', { class: cls });
+    e.innerHTML = '<svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (GSVG[name] || '') + '</svg>';
+    return e;
+  };
   const groupOf = (c) => (GROUPS.find((g) => g.cats.includes(c)) || GROUPS[4]).name;
+  // Banks / card issuers for debt and charge items. Older items carry the statement account name, so the bank is read from it unless set explicitly.
+  const BANKS = ['CIMB', 'Bank Islam', 'Standard Chartered', 'UOB', 'Maybank', 'RHB', 'Hong Leong', 'AmBank', 'Public Bank', 'HSBC', 'Other bank'];
+  const NOT_SET = 'Not set';
+  const bankOf = (i) => {
+    if (i.bank) return i.bank;
+    const a = (i.account || '').toLowerCase();
+    if (/bimb|bank islam/.test(a)) return 'Bank Islam';
+    if (/cimb/.test(a)) return 'CIMB';
+    if (/standard/.test(a)) return 'Standard Chartered';
+    if (/uob/.test(a)) return 'UOB';
+    if (/maybank/.test(a)) return 'Maybank';
+    if (/\brhb\b/.test(a)) return 'RHB';
+    if (/hong ?leong/.test(a)) return 'Hong Leong';
+    if (/ambank/.test(a)) return 'AmBank';
+    if (/public bank/.test(a)) return 'Public Bank';
+    if (/hsbc/.test(a)) return 'HSBC';
+    return NOT_SET;
+  };
   const DISCRETIONARY = new Set(['Food & dining', 'Shopping & clothing', 'Travel & leisure', 'E-wallet top-up', 'Hardware & home']);
 
-  const S = { store: null, months: {}, debts: [], cats: DEFAULT_CATS.slice(), cur: null, view: 'month', open: {} };
+  const S = { store: null, months: {}, debts: [], cats: DEFAULT_CATS.slice(), cur: null, view: 'month', open: {}, subBank: null };
 
   /* ---------- persistence: one write at a time per document ---------- */
   const queue = {};
@@ -161,35 +182,47 @@
       const pct = Math.round(gsum / total * 100);
       grid.append(el('button', { type: 'button', role: 'tab', class: 'gtile' + (on ? ' on' : '') + (gsum ? '' : ' zero') + (g.name === 'Debt & charges' ? ' debtg' : ''),
         'aria-label': `${g.name}: ${RM(gsum, 0)}`, 'aria-selected': on ? 'true' : 'false', title: g.name,
-        onclick: () => { S.openGroup = on ? null : g.name; S.subFilter = null; renderMonthView(); } },
-        el('span', { class: 'gti' }, ico(g.icon)), el('span', { class: 'gta', text: k(gsum) }),
+        onclick: () => { S.openGroup = on ? null : g.name; S.subFilter = null; S.subBank = null; renderMonthView(); } },
+        gicon(g.name, 'gti'), el('span', { class: 'gta', text: k(gsum) }),
         el('span', { class: 'gtb' }, el('i', { style: `width:${pct}%` }))));
     });
     box.append(grid);
     const g = GROUPS.find((x) => x.name === S.openGroup);
     if (!g) { box.append(el('div', { class: 'empty', style: 'text-align:center', text: 'Tap an icon to see its expenses.' })); return; }
     const list = M.items.filter((i) => groupOf(i.category) === g.name); const gsum = sum(list);
-    const subs = g.cats.map((c) => ({ c, l: list.filter((i) => i.category === c) })).filter(({ l }) => l.length);
-    const shown = (S.subFilter ? list.filter((i) => i.category === S.subFilter) : list).slice().sort((x, y) => y.amount - x.amount);
-    const key = S.cur + g.name + (S.subFilter || ''); const all = S.open[key];
+    const isDebt = g.name === 'Debt & charges';
+    const bankList = isDebt && S.subBank ? list.filter((i) => bankOf(i) === S.subBank) : list;
+    const subs = g.cats.map((c) => ({ c, l: bankList.filter((i) => i.category === c) })).filter(({ l }) => l.length);
+    const shown = (S.subFilter ? bankList.filter((i) => i.category === S.subFilter) : bankList).slice().sort((x, y) => y.amount - x.amount);
+    const key = S.cur + g.name + (S.subFilter || '') + (S.subBank || ''); const all = S.open[key];
     const pick = S.pick || null; if (pick) { const ids = new Set(list.map((i) => i.id)); [...pick].forEach((id) => { if (!ids.has(id)) pick.delete(id); }); }
     const vis = all || pick ? shown : shown.slice(0, 8);
     const panel = el('div', { class: 'gpanel' },
-      el('div', { class: 'gph' }, el('span', { class: 'gpn' }, ico(g.icon), g.name), el('span', { class: 'gpr' }, el('b', { text: RM(gsum, 0) }),
+      el('div', { class: 'gph' }, el('span', {}, gicon(g.name, 'gsm'), g.name), el('span', { class: 'gpr' }, el('b', { text: RM(gsum, 0) }),
         list.length ? el('button', { type: 'button', class: 'trayx', text: pick ? 'Done' : 'Select', onclick: () => { S.pick = pick ? null : new Set(); S.bulkArm = false; renderMonthView(); } }) : null)),
       pick ? bulkBar(M, shown, pick) : null,
+      isDebt ? bankChips(list) : null,
       subs.length > 1 ? el('div', { class: 'subs' },
         el('button', { type: 'button', class: 'spill' + (!S.subFilter ? ' on' : ''), text: 'All', onclick: () => { S.subFilter = null; renderMonthView(); } }),
         subs.map(({ c, l }) => el('button', { type: 'button', class: 'spill' + (S.subFilter === c ? ' on' : ''), text: `${c} · ${k(sum(l))}`, onclick: () => { S.subFilter = c; renderMonthView(); } }))) : null,
       el('div', { class: 'glist' }, vis.map((i) => el('button', { type: 'button', class: 'grow' + (pick && pick.has(i.id) ? ' picked' : ''), 'aria-pressed': pick ? String(pick.has(i.id)) : null,
         onclick: () => { if (!pick) { openEdit('item', i.id); return; } if (pick.has(i.id)) pick.delete(i.id); else pick.add(i.id); S.bulkArm = false; renderMonthView(); } },
         pick ? el('span', { class: 'pk', 'aria-hidden': 'true', text: pick.has(i.id) ? '✓' : '' }) : null,
-        el('span', { class: 'gd' }, el('span', { text: i.desc }), el('span', { class: 'gsub', text: `${+i.date.slice(8)} ${MON[+i.date.slice(5, 7) - 1]} · ${i.category}` })), el('b', { text: RM(i.amount, 2) }))),
+        el('span', { class: 'gd' }, el('span', { text: i.desc }), el('span', { class: 'gsub', text: `${+i.date.slice(8)} ${MON[+i.date.slice(5, 7) - 1]} · ${i.category}${isDebt ? ' · ' + bankOf(i) : ''}` })), el('b', { text: RM(i.amount, 2) }))),
         shown.length ? null : el('div', { class: 'empty', text: 'Nothing here this month.' })),
       shown.length > 8 && !pick ? el('button', { class: 'more', type: 'button', text: all ? 'Show less' : `Show all ${shown.length}`, onclick: () => { S.open[key] = !all; renderMonthView(); } }) : null);
     box.append(panel);
   }
   const sum = (l) => l.reduce((a, i) => a + i.amount, 0);
+  // Filter the debt and charges list by the bank or card issuer it came from.
+  function bankChips(list) {
+    const banks = [...new Set(list.map(bankOf))].sort((a, b) => (a === NOT_SET) - (b === NOT_SET) || a.localeCompare(b));
+    if (banks.length < 2 && !S.subBank) return null;
+    const total = (b) => sum(list.filter((i) => bankOf(i) === b));
+    return el('div', { class: 'subs banks', role: 'group', 'aria-label': 'Filter by bank' },
+      el('button', { type: 'button', class: 'spill' + (!S.subBank ? ' on' : ''), text: 'All banks', onclick: () => { S.subBank = null; S.subFilter = null; renderMonthView(); } }),
+      banks.map((b) => el('button', { type: 'button', class: 'spill' + (S.subBank === b ? ' on' : ''), text: `${b} · ${RM(total(b), 0)}`, onclick: () => { S.subBank = b; renderMonthView(); } })));
+  }
   // Bulk actions on the ticked expenses: move to a category (one pick) or delete (tap twice).
   function bulkBar(M, shown, pick) {
     const n = pick.size; const chosen = () => M.items.filter((i) => pick.has(i.id));
@@ -289,7 +322,7 @@
         el('div', { class: 'rank', text: i + 1 }),
         el('div', { class: 'nm' }, el('div', { text: d.name }), el('div', { text: d.note || '' })),
         el('div', { class: 'amt' }, el('div', { text: d.balance != null ? RM(d.balance, 0) : 'Balance ?' }), el('div', { text: RM(d.monthly, 0) + '/mo' })),
-        el('span', { class: 'mv' }, el('button', { 'aria-label': 'Move up', disabled: i === 0 ? '' : null, onclick: mv(-1) }, ico('up')), el('button', { 'aria-label': 'Move down', disabled: i === S.debts.length - 1 ? '' : null, onclick: mv(1) }, ico('down')))));
+        el('span', { class: 'mv' }, el('button', { 'aria-label': 'Move up', disabled: i === 0 ? '' : null, onclick: mv(-1) }, chev('m18 15-6-6-6 6')), el('button', { 'aria-label': 'Move down', disabled: i === S.debts.length - 1 ? '' : null, onclick: mv(1) }, chev('m6 9 6 6 6-6')))));
     });
     $('#debtTotal').textContent = RM(S.debts.reduce((a, d) => a + (d.balance || 0), 0), 0);
     box.append(el('button', { class: 'btn ghostbtn', text: '+ Add debt', style: 'margin-top:6px', onclick: () => openDebtEdit(null) }));
@@ -334,7 +367,69 @@
     return { m, avg, type, desc, months: ks.length };
   }
 
+  // Salary calculator: Malaysian payroll estimate. KWSP rates are inputs, so any employee or employer rate can be used.
+  const SAL_DEF = { gross: '', age: '30', epfEe: '11', epfEr: '12', reliefs: '0', zakat: '0' };
+  const salSaved = () => { try { return { ...SAL_DEF, ...JSON.parse(localStorage.getItem('ft-salary') || '{}') }; } catch (e) { return { ...SAL_DEF }; } };
+  const salStore = (v) => { try { localStorage.setItem('ft-salary', JSON.stringify(v)); } catch (e) { /* storage blocked */ } };
+  // Resident monthly-tax bands used for the PCB estimate: [band width in RM, rate].
+  const TAX_BANDS = [[5000, 0], [15000, 0.01], [15000, 0.03], [15000, 0.06], [20000, 0.11], [30000, 0.19], [300000, 0.25], [200000, 0.26], [1400000, 0.28], [Infinity, 0.30]];
+  function taxOn(chargeable) {
+    let left = chargeable; let tax = 0;
+    for (const [w, r] of TAX_BANDS) { const x = Math.min(left, w); if (x <= 0) break; tax += x * r; left -= x; }
+    return tax;
+  }
+  function salaryCalc(v) {
+    const n = (x) => parseFloat(x) || 0;
+    const gross = Math.max(0, n(v.gross)); const under60 = (n(v.age) || 30) < 60;
+    const epfEe = gross * n(v.epfEe) / 100; const epfEr = gross * n(v.epfEr) / 100;
+    // SOCSO (PERKESO) and EIS (SIP) at their capped amounts for wages of about RM5,000 and above (under 60 only).
+    const socEe = under60 ? Math.min(gross * 0.005, 29.75) : 0; const socEr = under60 ? Math.min(gross * 0.0175, 104.15) : 0;
+    const sipEe = under60 ? Math.min(gross * 0.002, 11.90) : 0; const sipEr = under60 ? Math.min(gross * 0.002, 11.90) : 0;
+    // Yearly chargeable income: EPF relief (max RM4,000), SOCSO + EIS relief (max RM350), personal relief RM9,000, other reliefs.
+    const reliefs = Math.min(epfEe * 12, 4000) + Math.min((socEe + sipEe) * 12, 350) + 9000 + n(v.reliefs);
+    const pcb = Math.max(0, taxOn(Math.max(0, gross * 12 - reliefs))) / 12;
+    const zakat = n(v.zakat);
+    const totalDed = epfEe + socEe + sipEe + pcb + zakat;
+    const r2 = (x) => Math.round(x * 100) / 100;
+    return { epfEe: r2(epfEe), epfEr: r2(epfEr), socEe: r2(socEe), socEr: r2(socEr), sipEe: r2(sipEe), sipEr: r2(sipEr), pcb: r2(pcb), zakat, gross, totalDed: r2(totalDed), net: r2(gross - totalDed), employer: r2(gross + epfEr + socEr + sipEr) };
+  }
+  function renderSalary() {
+    const box = $('#salary'); if (!box) return;
+    const v = salSaved(); box.replaceChildren();
+    const outBox = el('div', { class: 'salout', 'aria-live': 'polite' });
+    const row = (label, val, cls) => el('div', { class: 'srow' + (cls ? ' ' + cls : '') }, el('span', { text: label }), el('b', { text: RM(val, 2) }));
+    const out = () => {
+      const c = salaryCalc(v);
+      outBox.replaceChildren(
+        row('KWSP (employee)', c.epfEe), row('SOCSO (employee)', c.socEe), row('EIS / SIP (employee)', c.sipEe), row('PCB estimate', c.pcb),
+        ...(c.zakat ? [row('Zakat / other', c.zakat)] : []),
+        row('Total deductions', c.totalDed, 'sub2'),
+        row('Estimated net pay', c.net, 'tot'),
+        el('div', { class: 'srow sub2' }, el('span', { text: 'Employer cost' }), el('span', { text: RM(c.employer, 2) })),
+        el('div', { class: 'srow sub2' }, el('span', { text: 'KWSP employer' }), el('span', { text: RM(c.epfEr, 2) })));
+    };
+    const field = (key, label, hint, ph) => {
+      const inp = el('input', { class: 'in', inputmode: 'decimal', value: v[key] ?? '', placeholder: ph || '', 'aria-label': label });
+      inp.oninput = () => { v[key] = inp.value; salStore(v); out(); };
+      return el('label', { class: 'sfield' }, el('span', { text: label }), inp, ...(hint ? [el('small', { text: hint })] : []));
+    };
+    box.append(
+      field('gross', 'Gross monthly salary (RM)', '', 'e.g. 8000'),
+      field('age', 'Age', 'Under 60 gets SOCSO and EIS', '30'),
+      field('epfEe', 'KWSP employee rate (%)', 'Usually 11%. Set your own rate here.', '11'),
+      field('epfEr', 'KWSP employer rate (%)', 'Usually 12% above RM5,000, 13% at or below. Set your own rate here.', '12'),
+      field('reliefs', 'Other tax reliefs per year (RM)', 'Optional. For example lifestyle, medical or insurance relief.', '0'),
+      field('zakat', 'Zakat or other monthly deduction (RM)', 'Optional. Taken off net pay.', '0'),
+      outBox,
+      el('button', { type: 'button', class: 'btn ghostbtn', text: "Use net pay as this month's income", onclick: () => {
+        const c = salaryCalc(v); if (!c.net) { toast('Enter a gross salary first'); return; }
+        const M = ensureMonth(S.cur); M.income = c.net; M.incomeNote = 'From salary calculator'; saveMonth(S.cur); toast('Income set'); render(); } }),
+      el('p', { class: 'muted', style: 'font-size:11px;margin-top:8px', text: 'An estimate only. Actual deductions depend on your employer and payslip. Bonus and overtime are not included.' }));
+    out();
+  }
+
   function renderProfile() {
+    if ($('#salary') && !$('#salary').childElementCount) renderSalary();
     const P = profile();
     $('#ptype').textContent = P.type; $('#pdesc').textContent = P.desc;
     $('#profScope').textContent = P.months + ' months · avg ' + P.avg.toFixed(1) + '/5';
@@ -456,11 +551,14 @@
     const M = ensureMonth(S.cur); const list = kind === 'item' ? M.items : M.planned; const it = list.find((i) => i.id === id); if (!it) return;
     const d = el('input', { class: 'in', value: it.desc }); const a = el('input', { class: 'in', value: it.amount, inputmode: 'decimal' });
     const c = catSelect(it.category); const dt = el('input', { class: 'in', type: 'date', value: it.date || '' });
-    const save = () => { it.desc = d.value.trim() || it.desc; it.amount = Math.abs(parseFloat(a.value) || it.amount); it.category = c.value; it.date = dt.value || (kind === 'item' ? it.date : null); saveMonth(S.cur); closeSheet(); render(); };
+    const isDebt = kind === 'item' && groupOf(it.category) === 'Debt & charges';
+    const bk = isDebt ? el('select', { class: 'in', 'aria-label': 'Bank or card issuer' }) : null;
+    if (bk) { [NOT_SET, ...BANKS].forEach((b) => bk.append(new Option(b, b))); bk.value = bankOf(it); }
+    const save = () => { it.desc = d.value.trim() || it.desc; it.amount = Math.abs(parseFloat(a.value) || it.amount); it.category = c.value; it.date = dt.value || (kind === 'item' ? it.date : null); if (bk && bk.value !== NOT_SET) it.bank = bk.value; saveMonth(S.cur); closeSheet(); render(); };
     const btns = [el('button', { class: 'btn', text: 'Save', onclick: save })];
     if (kind === 'planned') btns.push(el('button', { class: 'btn ghostbtn', text: 'Mark paid', onclick: () => { M.planned = M.planned.filter((x) => x !== it); M.items.push({ id: uid('t'), date: dt.value || new Date().toISOString().slice(0, 10), desc: d.value, amount: Math.abs(parseFloat(a.value) || it.amount), category: c.value, account: 'Manual' }); saveMonth(S.cur); closeSheet(); toast('Marked as paid'); render(); } }));
     btns.push(el('button', { class: 'btn danger', text: 'Delete', onclick: () => { if (kind === 'item') M.items = M.items.filter((x) => x !== it); else M.planned = M.planned.filter((x) => x !== it); saveMonth(S.cur); closeSheet(); render(); } }));
-    sheet(kind === 'item' ? 'Edit expense' : 'Floating expense', [d, a, c, dt, el('div', { class: 'muted', text: it.account ? 'From: ' + it.account : '' }), el('div', { class: 'row', style: 'margin-top:8px' }, btns)]);
+    sheet(kind === 'item' ? 'Edit expense' : 'Floating expense', [d, a, c, dt, ...(bk ? [el('div', { class: 'muted', text: 'Bank / card issuer' }), bk] : []), el('div', { class: 'muted', text: it.account ? 'From: ' + it.account : '' }), el('div', { class: 'row', style: 'margin-top:8px' }, btns)]);
   }
 
   function openDebtEdit(id) {
@@ -650,7 +748,7 @@
       const dt = dIn.value || today; const m = dt.slice(0, 7); const M = ensureMonth(m); const shop = mIn.value.trim();
       const list = cur().filter((x) => x.keep && x.amount > 0); if (!list.length) { toast('Nothing ticked to add'); return; }
       list.forEach((x) => M.items.push({ id: uid('t'), date: dt, desc: (x.desc.trim() || shop || 'Receipt').slice(0, 60), amount: x.amount, category: x.category, account: 'Receipt' + (mode === 'split' && shop ? ' · ' + shop : '') }));
-      saveMonth(m); S.cur = m; S.openGroup = groupOf(list[0].category); S.subFilter = null; closeSheet(); render();
+      saveMonth(m); S.cur = m; S.openGroup = groupOf(list[0].category); S.subFilter = null; S.subBank = null; closeSheet(); render();
       toast(`Added ${list.length} expense${list.length === 1 ? '' : 's'} · ${RM(sum(list), 2)}`);
     };
     draw();
